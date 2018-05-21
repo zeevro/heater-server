@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block page_title %}Boiler Control{% endblock %}
+
+{% block head_content %}
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#immediate_duration').change(function() {
+					console.info('/turn_on/?duration=' + $(this).val());
+					console.info($('#immediate_link'));
+					$('#immediate_link').attr('href', '/turn_on/?duration=' + $(this).val());
+				});
+			});
+		</script>
+{% endblock %}
+
+{% block content %}
+		<div class="message">{{ message }}</div>
+		<a href="/turn_on/" class="action_link">Turn ON</a> |
+		<a href="/turn_off/" class="action_link">Turn OFF</a> |
+		<a href="/turn_on/?duration=30" class="action_link" id="immediate_link">Turn ON for</a>
+		<select id="immediate_duration">
+			<option value="15">15 minutes</option>
+			<option value="30" selected="true">30 minutes</option>
+			<option value="45">45 minutes</option>
+			<option value="60">1 hour</option>
+			<option value="90">1.5 hours</option>
+			<option value="120">2 hours</option>
+		</select>
+		<br /><br />
+		<a href="/edit/" class="action_link">New Item</a>
+		<table class="list">
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>Day(s)</th>
+					<th>Time</th>
+					<th>Duration</th>
+					<th />
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in items %}
+				<tr>
+					<td>{{ item.schedule_type|title }}</td>
+					<td>{{ item.days_str }}</td>
+					<td>{{ item.web_time }}</td>
+					<td>{{ item.duration }} minutes</td>
+					<td>
+						<a href="/edit/?id={{ item.id }}" class="action_link_icon" title="Edit"><i class="fa fa-sliders"></i></a>
+						<a href="/delete/?id={{ item.id }}" class="action_link_icon" title="Remove"><i class="fa fa-remove"></i></a>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		
+		<h2>Action Log</h2>
+		<table class="list">
+			<thead>
+				<tr>
+					<th>Time</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for record in log %}
+				<tr class="success">
+					<td>{{ record.time.strftime('%d/%m/%Y %I:%M:%S %p') }}</td>
+					<td class="cmd_{{ record.cmd }}">{{ record.cmd|upper }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+{% endblock %}

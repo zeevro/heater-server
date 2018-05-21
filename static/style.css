@@ -1,0 +1,48 @@
+.hidden {
+	display: none;
+}
+
+thead > tr {
+	color: #404040;
+	background-color: #e0e0e0;
+}
+
+.list > tbody > tr {
+	text-align: center;
+	background-color: #e0e0e0;
+}
+
+.list > tbody > tr:nth-child(odd) {
+	background-color: #ffffff;
+}
+
+.list > tbody > tr.failure {
+	background-color: #ff9090;
+}
+
+.list > tbody > tr.failure:nth-child(odd) {
+	background-color: #ffc0c0;
+}
+
+td.cmd_on {
+	color: green;
+}
+
+td.cmd_off {
+	color: red;
+}
+
+a.action_link {
+	text-decoration: none;
+	color: blue;
+}
+
+a.action_link_icon {
+	text-decoration: none;
+	color: black;
+}
+
+.item {
+	font-family: sans-serif;
+	font-size: larger;
+}

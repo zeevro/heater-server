@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block page_title %}{% if item.id == None %}New{% else %}Edit{% endif %} Item{% endblock %}
+
+{% block head_content %}
+		<script type="text/javascript">
+			$(document).ready(function() {
+				{% if item.id == None %}
+				var sd = new Date(server_time * 1000), d;
+				if (sd.getUTCSeconds() < 30) {
+					d = new Date((server_time + 1 * 60) * 1000);
+				} else {
+					d = new Date((server_time + 2 * 60) * 1000);
+				}
+				$('#days').val(pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear());
+				$('#on_time').val(pad((d.getHours() - 1) % 12 + 1) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + ' ' + (d.getHours() > 11 ? 'P' : 'A') + 'M');
+				{% endif %}
+			
+				$('#days').datepicker({dateFormat: "dd/mm/yy"});
+
+				$('#on_time').timepicker({timeFormat: 'h:i A', step: 15});
+
+				$('#schedule_type').change(function() {
+					if ($('#schedule_type').val() == 'once') {
+						$('#days_weekly').addClass('hidden')
+						$('#days_once').removeClass('hidden')
+					} else {
+						$('#days_weekly').removeClass('hidden')
+						$('#days_once').addClass('hidden')
+					}
+				});
+
+				$('form').submit(function() {
+					if ($('#schedule_type').val() == 'weekly') {
+						var checkValues = $('.days_weekly_checkbox:checked').map(function() {
+							return $(this).val();
+						}).get();
+						$('#days').val(checkValues);
+					}
+				});
+
+				$('#schedule_type').change();
+			});
+		</script>
+{% endblock %}
+
+{% block content %}
+		<form method="POST" action="/edit/{% if item.id != None %}?id={{ item.id }}{% endif %}">
+			<input type="hidden" name="token" value="{{ token }}" />
+			<table>
+				<tr>
+					<td><label for="schedule_type">Type</label></td>
+					<td>
+						<select id="schedule_type" name="schedule_type">
+						{% for t in ['once', 'weekly'] %}
+							<option value="{{ t }}"{% if item.schedule_type == t %} selected="selected"{% endif %}>{{ t|title }}</option>
+						{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><label>Day(s)</label></td>
+					<td>
+						<div id="days_weekly">
+						{% for i, s in days %}
+							<input type="checkbox" id="days_{{ i }}" class="days_weekly_checkbox" value="{{ i }}" {% if item.schedule_type == 'weekly' and (i in item.days) %}checked="checked"{% endif %}/>
+							<label for="days_{{ i }}">{{ s }}</label>
+						{% endfor %}
+						</div>
+						<div id="days_once">
+							<input id="days" name="days" value="{{ item.days_str }}"/>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label for="on_time">Time</label></td>
+					<td><input id="on_time" name="on_time" value="{{ item.web_time }}"/></td>
+				</tr>
+				<tr>
+					<td><label for="duration">Duration</label></td>
+					<td>
+						<!-- <input id="duration" name="duration" value="{{ item.duration }}"/> -->
+						<select id="duration" name="duration">
+							<option value="15"{% if item.duration == 15 %} selected="true"{% endif %}>15 minutes</option>
+							<option value="30"{% if item.duration == 30 or item.duration == 20 %} selected="true"{% endif %}>30 minutes</option>
+							<option value="45"{% if item.duration == 45 %} selected="true"{% endif %}>45 minutes</option>
+							<option value="60"{% if item.duration == 60 %} selected="true"{% endif %}>1 hour</option>
+							<option value="90"{% if item.duration == 90 %} selected="true"{% endif %}>1.5 hours</option>
+							<option value="120"{% if item.duration == 120 %} selected="true"{% endif %}>2 hours</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="{% if item.id == None %}Create{% else %}Save{% endif %}" /></td>
+					<td><a href="/" class="action_link">Cancel</a></td>
+			</table>
+		</form>
+{% endblock %}

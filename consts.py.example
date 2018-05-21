@@ -1,0 +1,10 @@
+REDIS_KWARGS = {}
+MQTT_KWARGS = {}
+PASSWORD = 'password'
+
+MAX_LOG_LINES = 12
+LOG_KEY = 'heater-log'
+MQTT_CHANNEL = 'heater'
+
+HEATER_ITEMS_KEY = 'heater-items'
+HEATER_TOKEN_KEY = 'heater-token'
