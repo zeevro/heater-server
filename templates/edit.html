@@ -20,8 +20,8 @@
 
 				$('#on_time').timepicker({timeFormat: 'h:i A', step: 15});
 
-				$('#schedule_type').change(function() {
-					if ($('#schedule_type').val() == 'once') {
+				$('.schedule_type_radio').change(function() {
+					if (this.value == 'once') {
 						$('#days_weekly').addClass('hidden')
 						$('#days_once').removeClass('hidden')
 					} else {
@@ -31,7 +31,7 @@
 				});
 
 				$('form').submit(function() {
-					if ($('#schedule_type').val() == 'weekly') {
+					if ($('.schedule_type_radio[checked]').val() == 'weekly') {
 						var checkValues = $('.days_weekly_checkbox:checked').map(function() {
 							return $(this).val();
 						}).get();
@@ -39,7 +39,7 @@
 					}
 				});
 
-				$('#schedule_type').change();
+				$('.schedule_type_radio[checked]').change();
 			});
 		</script>
 {% endblock %}
@@ -51,11 +51,9 @@
 				<tr>
 					<td><label for="schedule_type">Type</label></td>
 					<td>
-						<select id="schedule_type" name="schedule_type">
-						{% for t in ['once', 'weekly'] %}
-							<option value="{{ t }}"{% if item.schedule_type == t %} selected="selected"{% endif %}>{{ t|title }}</option>
-						{% endfor %}
-						</select>
+					{% for t in ['once', 'weekly'] %}
+						<label><input type="radio" name="schedule_type" class="schedule_type_radio" value="{{ t }}"{% if item.schedule_type == t %} checked="true"{% endif %}/>{{ t|title }}</label>
+					{% endfor %}
 					</td>
 				</tr>
 				<tr>
@@ -63,8 +61,7 @@
 					<td>
 						<div id="days_weekly">
 						{% for i, s in days %}
-							<input type="checkbox" id="days_{{ i }}" class="days_weekly_checkbox" value="{{ i }}" {% if item.schedule_type == 'weekly' and (i in item.days) %}checked="checked"{% endif %}/>
-							<label for="days_{{ i }}">{{ s }}</label>
+							<label><input type="checkbox" id="days_{{ i }}" class="days_weekly_checkbox" value="{{ i }}" {% if item.schedule_type == 'weekly' and (i in item.days) %}checked="checked"{% endif %}/>{{ s }}</label>
 						{% endfor %}
 						</div>
 						<div id="days_once">

@@ -70,6 +70,12 @@ def edit():
                                days=[(str(i), d) for i, d in enumerate(DAYS)],
                                time=_web_time())
 
+    if not request.form['days']:
+        return redirect(url_for('items', message='No day(s) in request!'))
+
+    if not request.form['days']:
+        return redirect(url_for('items', message='No time in request!'))
+
     item = B(request.form['schedule_type'],
              request.form['days'],
              request.form['on_time'] or datetime.now().strftime(WEB_TIME_FORMAT),

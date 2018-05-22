@@ -102,13 +102,16 @@ class B(object):
 
     @property
     def days_str(self):
-        if self.schedule_type == 'weekly':
-            return get_ranges(map(int, self.days.split(',')), DAYS.__getitem__, ', ', ' - ')
+        try:
+            if self.schedule_type == 'weekly':
+                return get_ranges(map(int, self.days.split(',')), DAYS.__getitem__, ', ', ' - ')
 
-        if self.schedule_type == 'once':
-            return datetime.strptime(self.days, DATE_FORMAT).strftime(WEB_DATE_FORMAT)
+            if self.schedule_type == 'once':
+                return datetime.strptime(self.days, DATE_FORMAT).strftime(WEB_DATE_FORMAT)
 
-        return ''
+            return ''
+        except Exception:
+            return ''
 
     @property
     def web_time(self):
