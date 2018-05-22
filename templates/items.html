@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_title %}Boiler Control{% endblock %}
+{% block page_title %}Heater Control{% endblock %}
 
 {% block head_content %}
 		<script type="text/javascript">
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-		<div class="message">{{ message }}</div>
+		<div class="message">{{ message }}</div><br />
 		<a href="/turn_on/" class="action_link">Turn ON</a> |
 		<a href="/turn_off/" class="action_link">Turn OFF</a> |
 		<a href="/turn_on/?duration=30" class="action_link" id="immediate_link">Turn ON for</a>
@@ -29,6 +29,7 @@
 		</select>
 		<br /><br />
 		<a href="/edit/" class="action_link">New Item</a>
+		{% if items %}
 		<table class="list">
 			<thead>
 				<tr>
@@ -40,7 +41,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			{% for item in items %}
+			{% for item in items|sort(attribute='on_time')|sort(attribute='days')|sort(reverse=True, attribute='schedule_type') %}
 				<tr>
 					<td>{{ item.schedule_type|title }}</td>
 					<td>{{ item.days_str }}</td>
@@ -54,6 +55,7 @@
 			{% endfor %}
 			</tbody>
 		</table>
+		{% endif %}
 		
 		<h2>Action Log</h2>
 		<table class="list">
