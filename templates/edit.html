@@ -31,15 +31,20 @@
 				});
 
 				$('form').submit(function() {
-					if ($('.schedule_type_radio[checked]').val() == 'weekly') {
+					if ($('.schedule_type_radio:checked').val() == 'weekly') {
 						var checkValues = $('.days_weekly_checkbox:checked').map(function() {
 							return $(this).val();
 						}).get();
+						if (!checkValues.length)
+						{
+							alert('No days selected!');
+							return false;
+						}
 						$('#days').val(checkValues);
 					}
 				});
 
-				$('.schedule_type_radio[checked]').change();
+				$('.schedule_type_radio:checked').change();
 			});
 		</script>
 {% endblock %}
