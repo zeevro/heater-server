@@ -60,7 +60,7 @@ class Cron(object):
         self.task = task
 
     def pack(self):
-        return ' '.join(map(str, [self.minute, self.hour, self.day, self.month, self.weekday, self.task]))
+        return ' '.join(map(str, [self.minute, self.hour, self.day, self.month, self.weekday, self.task])) + '\n'
 
     @classmethod
     def parse(cls, s):
@@ -232,10 +232,10 @@ def sync_crontab(wait=True):
     crons = [Cron(minute='*/10', task='python /var/www/cleanup.py').pack()]
     for b in read_boiler_all():
         crons += [c.pack() for c in b.crons]
-    crontab = '\n'.join(crons)
+    crontab = ''.join(crons)
 
     with open(TMP_CRON_PATH, 'w') as out_f:
-        print >> out_f, crontab
+        out_f.write(crontab)
 
     ret = call(CRONTAB_CMD + [TMP_CRON_PATH])
 
