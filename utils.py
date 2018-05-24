@@ -187,7 +187,12 @@ def read_boiler(id_=None):
     if id_ is None:
         return None, token
 
-    return B.parse(s.lindex(HEATER_ITEMS_KEY, id_), id_), token
+    t = s.lindex(HEATER_ITEMS_KEY, id_)
+
+    if t is None:
+        return None, token
+
+    return B.parse(t, id_), token
 
 
 def update_boiler(item, token, insert_on_top=False):

@@ -63,6 +63,9 @@ def edit():
     item, token = read_boiler(item_id)
     item = item or B()
 
+    if item_id is not None and item.id is None:
+        return redirect(url_for('items', message='Item not found!'))
+
     if request.method == 'GET':
         return render_template('edit.html',
                                token=token,
@@ -99,6 +102,9 @@ def edit():
 def delete():
     item_id = int(request.args['id'])
     item, token = read_boiler(item_id)
+
+    if item is None:
+        return redirect(url_for('items', message='Item not found!'))
 
     sure = bool(request.args.get('sure'))
 
